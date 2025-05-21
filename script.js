@@ -96,26 +96,47 @@ function calculateFontSize() {
     }
 }
 
-function copy() {
-    navigator.clipboard.writeText(inputEl.value)
+function copy(event) {
+    navigator.clipboard.writeText(inputEl.value).then(() => {
+        // Encontra o botão que foi clicado
+        const button = event.target;
+
+        // Cria ou reutiliza um span para mostrar a mensagem
+        let messageEl = button.parentElement.querySelector(".copy-message");
+
+        if (!messageEl) {
+            messageEl = document.createElement("span");
+            messageEl.classList.add("copy-message");
+            button.parentElement.appendChild(messageEl);
+        }
+
+        messageEl.innerText = "Senha copiada!";
+        messageEl.classList.add("show");
+
+        // Esconde a mensagem após 2 segundos
+        setTimeout(() => {
+            messageEl.classList.remove("show");
+        }, 2000);
+    }).catch(err => {
+        console.error("Erro ao copiar:", err);
+    });
 }
 
-const passwordLengthEl = document.querySelector("#password-length")
+const passwordLengthEl = document.querySelector("#password-length");
 passwordLengthEl.addEventListener("input", function () {
- passwordLength = passwordLengthEl.value
- document.querySelector('#password-length-text').innerText = passwordLength
-    
-    generatePassword()
-})
+    passwordLength = passwordLengthEl.value;
+    document.querySelector('#password-length-text').innerText = passwordLength;
+    generatePassword();
+});
 
-upperCaseCheckEl.addEventListener("click", generatePassword)
-numberCheckEl.addEventListener("click", generatePassword)
-symbolCheckEl.addEventListener("click", generatePassword)
+upperCaseCheckEl.addEventListener("click", generatePassword);
+numberCheckEl.addEventListener("click", generatePassword);
+symbolCheckEl.addEventListener("click", generatePassword);
 
-document.querySelector("#copy-1").addEventListener("click", copy)
-document.querySelector("#copy-2").addEventListener("click", copy)
-document.querySelector("#renew").addEventListener("click", generatePassword)
+document.querySelector("#copy-1").addEventListener("click", copy);
+document.querySelector("#copy-2").addEventListener("click", copy);
+document.querySelector("#renew").addEventListener("click", generatePassword);
 
-generatePassword()
+generatePassword();
 
 
